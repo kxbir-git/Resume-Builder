@@ -11,7 +11,7 @@ const isVercel = !!process.env.VERCEL || process.env.NITRO_PRESET === "vercel";
 
 export default async (env: ConfigEnv): Promise<UserConfig> => {
   if (isVercel) {
-    const { tanstackStart } = await import("@tanstack/react-start/plugin");
+    const { tanstackStart } = await import("@tanstack/react-start/plugin/vite");
     const react = (await import("@vitejs/plugin-react")).default;
     const tailwindcss = (await import("@tailwindcss/vite")).default;
     const tsconfigPaths = (await import("vite-tsconfig-paths")).default;
