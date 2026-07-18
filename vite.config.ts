@@ -1,15 +1,34 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import type { ConfigEnv, UserConfig } from "vite";
 
-export default defineConfig({
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
-  },
-});
+// Two build paths:
+// 1. On Vercel (or when VERCEL=1 / NITRO_PRESET=vercel is set) → plain
+//    TanStack Start + Nitro with the `vercel` preset. Nitro writes to
+//    `.vercel/output/` which Vercel picks up via Build Output API v3.
+// 2. Everywhere else (Lovable sandbox / preview / local dev) → the
+//    `@lovable.dev/vite-tanstack-config` wrapper. That keeps HMR, error
+//    overlays, and the default Cloudflare-compatible bundle intact.
+const isVercel = !!process.env.VERCEL || process.env.NITRO_PRESET === "vercel";
+
+export default async (env: ConfigEnv): Promise<UserConfig> => {
+  if (isVercel) {
+    const { tanstackStart } = await import("@tanstack/react-start/plugin/vite");
+    const react = (await import("@vitejs/plugin-react")).default;
+    const tailwindcss = (await import("@tailwindcss/vite")).default;
+    const tsconfigPaths = (await import("vite-tsconfig-paths")).default;
+    const { nitro } = await import("nitro/vite");
+
+    return {
+      plugins: [
+        tsconfigPaths(),
+        tailwindcss(),
+        tanstackStart(),
+        react(),
+        nitro({ preset: "vercel" }),
+      ],
+    };
+  }
+
+  const { defineConfig } = await import("@lovable.dev/vite-tanstack-config");
+  const build = defineConfig();
+  return build(env);
+};
