@@ -1,1 +1,3 @@
-link- https://buildabridge-resume.lovable.app/  
+# Resumecraft
+
+A beautiful resume builder.

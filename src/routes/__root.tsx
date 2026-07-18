@@ -38,11 +38,10 @@ export const Route = createRootRoute({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Resumecraft — Resumes that get you hired" },
       { name: "twitter:description", content: "Build a beautiful, professional resume in minutes with friendly templates, live preview, and AI suggestions." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c0f25098-0cf8-438c-990b-3f47aa9374d4/id-preview-e50298c1--1d018abc-1ee3-464c-8788-cdbdaa0a90e9.lovable.app-1776361552597.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c0f25098-0cf8-438c-990b-3f47aa9374d4/id-preview-e50298c1--1d018abc-1ee3-464c-8788-cdbdaa0a90e9.lovable.app-1776361552597.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
